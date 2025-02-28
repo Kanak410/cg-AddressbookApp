@@ -3,6 +3,7 @@ package com.bridgelabz.kanak.cgaddressbookapp.controller;
 import com.bridgelabz.kanak.cgaddressbookapp.dto.AddressDto;
 import com.bridgelabz.kanak.cgaddressbookapp.entity.AddressEntity;
 import com.bridgelabz.kanak.cgaddressbookapp.repository.AddressRepo;
+import com.bridgelabz.kanak.cgaddressbookapp.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
 import org.springframework.web.bind.annotation.*;
@@ -14,36 +15,31 @@ import java.util.List;
 @RequestMapping("/api/v")
 public class AddressController {
     @Autowired
-    private AddressRepo addressRepo;
+    private AddressService addressService;
    @GetMapping()
     public List<AddressEntity> getAddresses() {
-       return addressRepo.findAll();
+       return addressService.getAllAddresses();
 
    }
    @GetMapping("/{id}")
     public AddressEntity getAddressById(@PathVariable Long id) {
-       return addressRepo.findById(id).get();
+       return addressService.getAddressById(id);
    }
    @PostMapping("/add")
     public AddressEntity addAddress(@RequestBody AddressDto addressDto) {
-       AddressEntity addressEntity = new AddressEntity(addressDto);
-       return addressRepo.save(addressEntity);
+
+       return addressService.addAddress(addressDto);
    }
    @PutMapping("/update/{id}")
     public AddressEntity updateAddress(@PathVariable Long id, @RequestBody AddressDto addressDto) {
-      AddressEntity updatedAddress = addressRepo.findById(id).orElse(null);
-      if(updatedAddress != null) {
-          updatedAddress.setCity(addressDto.getCity());
-          updatedAddress.setCountry(addressDto.getCountry());
-          updatedAddress.setZipcode(addressDto.getZipcode());
-          return addressRepo.save(updatedAddress);
-      }
-      return null;
+
+          return addressService.updateAddress(id,addressDto);
+
 
    }
    @DeleteMapping("/delete/{id}")
     public void deleteAddress(@PathVariable Long id) {
-       addressRepo.deleteById(id);
+       addressService.deleteAddressById(id);
    }
 
 
