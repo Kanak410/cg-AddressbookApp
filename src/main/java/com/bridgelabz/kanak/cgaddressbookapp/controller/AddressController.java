@@ -1,6 +1,7 @@
 package com.bridgelabz.kanak.cgaddressbookapp.controller;
 
 import com.bridgelabz.kanak.cgaddressbookapp.dto.AddressDto;
+import com.bridgelabz.kanak.cgaddressbookapp.entity.AddressEntity;
 import com.bridgelabz.kanak.cgaddressbookapp.repository.AddressRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.amqp.RabbitConnectionDetails;
@@ -15,21 +16,22 @@ public class AddressController {
     @Autowired
     private AddressRepo addressRepo;
    @GetMapping()
-    public List<AddressDto> getAddresses() {
+    public List<AddressEntity> getAddresses() {
        return addressRepo.findAll();
 
    }
    @GetMapping("/{id}")
-    public AddressDto getAddressById(@PathVariable Long id) {
-       return addressRepo.findById(id).orElse(null);
+    public AddressEntity getAddressById(@PathVariable Long id) {
+       return addressRepo.findById(id).get();
    }
    @PostMapping("/add")
-    public AddressDto addAddress(@RequestBody AddressDto addressDto) {
-       return addressRepo.save(addressDto);
+    public AddressEntity addAddress(@RequestBody AddressDto addressDto) {
+       AddressEntity addressEntity = new AddressEntity(addressDto);
+       return addressRepo.save(addressEntity);
    }
    @PutMapping("/update/{id}")
-    public AddressDto updateAddress(@PathVariable Long id, @RequestBody AddressDto addressDto) {
-      AddressDto updatedAddress = addressRepo.findById(id).orElse(null);
+    public AddressEntity updateAddress(@PathVariable Long id, @RequestBody AddressDto addressDto) {
+      AddressEntity updatedAddress = addressRepo.findById(id).orElse(null);
       if(updatedAddress != null) {
           updatedAddress.setCity(addressDto.getCity());
           updatedAddress.setCountry(addressDto.getCountry());
