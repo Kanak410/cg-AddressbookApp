@@ -10,14 +10,13 @@ import lombok.NoArgsConstructor;
 
 @Data
 
-@Entity
+
 @NoArgsConstructor
 public class AddressDto {
      private String city;
      private String country;
      private Long zipcode;
-     @Id
-     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
      private Long id;
      public AddressDto(String city, String country, Long zipcode) {
           this.city = city;
